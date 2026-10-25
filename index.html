@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>תורנות ארוחת בוקר – מועדון IGP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@700&family=Heebo:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FAF6EE; --ink:#2A2117; --card:#FFFFFF; --line:#E4D9C4;
+  --green:#1F4D36; --green-ink:#F3F8F4; --amber:#9A6410; --amber-bg:#FBEBD2; --muted:#7A6F5C;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#1B1712;--ink:#EDE6D8;--card:#242019;--line:#3A3326;--green:#2F7552;--green-ink:#F3F8F4;--amber:#E0A648;--amber-bg:#2E2412;--muted:#A79A82;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#1B1712;--ink:#EDE6D8;--card:#242019;--line:#3A3326;--green:#2F7552;--green-ink:#F3F8F4;--amber:#E0A648;--amber-bg:#2E2412;--muted:#A79A82;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Heebo',sans-serif;line-height:1.5}
+body{max-width:620px;margin:0 auto;padding-block:26px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:'Frank Ruhl Libre',serif;font-size:1.7rem;margin:0 0 2px}
+.sub{color:var(--muted);margin:0 0 20px;font-size:.95rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.hero{background:var(--green);color:var(--green-ink);border:none}
+.hero .label{font-size:.85rem;opacity:.85}
+.hero .name{font-family:'Frank Ruhl Libre',serif;font-size:2.2rem;font-weight:700;line-height:1.2}
+.hero .date{opacity:.9}
+.next{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.25);font-size:.95rem;opacity:.95}
+h2{font-size:1.05rem;margin:0 0 10px}
+ol{list-style:none;margin:0;padding:0}
+li.turn{min-width:0;display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+li.turn:last-child{border-bottom:none}
+.chip{min-width:58px;text-align:center;background:var(--amber-bg);color:var(--amber);border-radius:7px;font-size:.82rem;padding:3px 8px}
+.who{flex:1;font-weight:500}
+.tag{font-size:.78rem;color:var(--muted)}
+ul.shop{margin:0;padding:0 18px 0 0}
+ul.shop li{margin:6px 0}
+.note{color:var(--muted);font-size:.9rem;margin-top:12px}
+.foot{color:var(--muted);font-size:.8rem;text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<h1>תורנות ארוחת בוקר</h1>
+<p class="sub">מועדון IGP · התורנות מתעדכנת אוטומטית כל שבוע</p>
+
+<div class="card hero">
+  <div class="label" id="heroLabel"></div>
+  <div class="name" id="heroName"></div>
+  <div class="date" id="heroDate"></div>
+  <div class="next" id="heroNext"></div>
+</div>
+
+<div class="card">
+  <h2>הסבב הקרוב</h2>
+  <ol id="queue"></ol>
+  <p class="note">מי שהגיע תורו עובר אוטומטית לסוף הרשימה. אם אינך יכול לבצע את התורנות, דאג למצוא מחליף והודע למארגן.</p>
+</div>
+
+<div class="card">
+  <h2>רשימת מצרכים בסיסית לארוחת בוקר</h2>
+  <ul class="shop">
+    <li>נקניק / פסטרמה פרוסים (שני סוגים שונים)</li>
+    <li>גבינה צהובה</li>
+    <li>חומוס</li>
+    <li>סלטים (לדוגמה: טחינה, כרוב אדום במיונז, קולסלאו, סלט ביצים, ירקות) – 3-4 סוגים</li>
+    <li>ממרח חריף</li>
+    <li>פיתות / לחמניות / חלה</li>
+    <li>מלפפון בחומץ + במלח</li>
+    <li>2 ליטר חלב (שיהיה גם ליום שני)</li>
+    <li>שישיית מים מינרלים (ודאו אם יש צורך לחדש)</li>
+    <li>קינוח (עוגיות, עוגה, מאפים)</li>
+    <li>שקית קפה שחור</li>
+    <li>נייר סופג</li>
+  </ul>
+  <p class="note">יצירתיות מומלצת! ניתן לשנות, להוסיף או להחליף מצרכים לפי רצונכם. תיהנו ואל תשכחו לשתף רעיונות חדשים.</p>
+</div>
+
+<p class="foot">כדי לשנות שמות או סדר, עורכים את הרשימה בתחילת הסקריפט בקובץ index.html</p>
+
+<script>
+// ===== הגדרות – כאן עורכים =====
+// סדר הסבב. אחרי השם האחרון הסבב חוזר לראשון.
+// שם אחד בכל שורה, בין גרשיים, ופסיק בסוף השורה. התאריך אחרי // הוא רק הערה.
+const ROSTER = [
+  "שרון",                    // 30.10.26
+  "שלמה",                    // 6.11
+  "אבי",                     // 13.11
+  "מיימון",                  // 20.11
+  "יקיריקו (יקיר חג׳אג׳)",   // 27.11
+  "לינה",                    // 4.12
+  "חליל",                    // 11.12
+  "קטי",                     // 18.12
+  "ענת",                     // 25.12
+  "אולגה",                   // 1.1.27
+  "יקיר חג׳אג׳",             // 8.1
+  "הגר",                     // 15.1
+  "יקיריקו",                 // 22.1
+  "יבגני",                   // 29.1
+  "עירית",                   // 5.2
+  "ברק",                     // 12.2
+  "שוקי",                    // 19.2
+  "יורי"                     // 26.2 (השם האחרון בלי פסיק)
+];
+// תאריך התורנות של השם הראשון ברשימה (שנה, חודש מינוס 1, יום): 30.10.2026
+const ANCHOR = Date.UTC(2026, 9, 30);
+// =================================
+
+const DAY = 86400000;
+const el = id => document.getElementById(id);
+
+function todayUTC(){
+  // תאריך היום בישראל, כדי שהחישוב לא יושפע מאזור הזמן של המכשיר
+  const [y,m,d] = new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Jerusalem'}).split('-').map(Number);
+  return Date.UTC(y, m-1, d);
+}
+function fmt(ms){
+  const d = new Date(ms);
+  return `${d.getUTCDate()}.${d.getUTCMonth()+1}.${String(d.getUTCFullYear()).slice(2)}`;
+}
+function fmtLong(ms){
+  return new Date(ms).toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+}
+
+const N = ROSTER.length;
+const today = todayUTC();
+// מספר הסבב של התורנות הקרובה (היום או אחריו)
+const week = Math.max(0, Math.ceil((today - ANCHOR) / (7*DAY)));
+const turn = k => ({ name: ROSTER[(week+k) % N], date: ANCHOR + (week+k)*7*DAY });
+
+const cur = turn(0), nxt = turn(1);
+el('heroLabel').textContent = (cur.date === today) ? 'התורן היום' : 'התורן הקרוב';
+el('heroName').textContent = cur.name;
+el('heroDate').textContent = fmtLong(cur.date);
+el('heroNext').textContent = `אחריו: ${nxt.name} (${fmt(nxt.date)})`;
+
+const q = el('queue');
+for(let k=0;k<N;k++){
+  const t = turn(k);
+  const li = document.createElement('li');
+  li.className = 'turn';
+  li.innerHTML = `<span class="chip">${fmt(t.date)}</span><span class="who"></span><span class="tag">${k===0?'הקרוב':(k===N-1?'סוף הרשימה':'')}</span>`;
+  li.querySelector('.who').textContent = t.name;
+  q.appendChild(li);
+}
+</script>
+</body>
+</html>
